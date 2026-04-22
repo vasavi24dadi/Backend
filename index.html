@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>API Test</title>
+</head>
+<body>
+
+<h2>Register</h2>
+<input id="name" placeholder="Name"><br>
+<input id="email" placeholder="Email"><br>
+<input id="password" placeholder="Password"><br>
+<button onclick="register()">Register</button>
+
+<h2>Login</h2>
+<input id="loginEmail" placeholder="Email"><br>
+<input id="loginPassword" placeholder="Password"><br>
+<button onclick="login()">Login</button>
+
+<h2>Create Task</h2>
+<input id="taskTitle" placeholder="Task Title"><br>
+<button onclick="createTask()">Create Task</button>
+
+<p id="output"></p>
+
+<script>
+const API = "http://localhost:5000";
+
+async function register() {
+  const res = await fetch(API + "/api/auth/register", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: name.value,
+      email: email.value,
+      password: password.value
+    })
+  });
+  output.innerText = await res.text();
+}
+
+async function login() {
+  const res = await fetch(API + "/api/auth/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      email: loginEmail.value,
+      password: loginPassword.value
+    })
+  });
+
+  const data = await res.json();
+  localStorage.setItem("token", data.token);
+  output.innerText = "Logged in!";
+}
+
+async function createTask() {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(API + "/api/tasks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token
+    },
+    body: JSON.stringify({
+      title: taskTitle.value,
+      completed: false
+    })
+  });
+
+  output.innerText = await res.text();
+}
+</script>
+
+</body>
+</html>
