@@ -1,5 +1,4 @@
 # Backend Developer Assignment
-Basic frontend implemented to demonstrate API interaction.
 
 ## Features
 - User Registration & Login (JWT Authentication)
